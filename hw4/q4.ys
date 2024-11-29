@@ -1,0 +1,139 @@
+# 
+# q4.ys - determines whether 'input' interpreted as a BCD is a multiple of 6
+#
+# Jessie Li, CS 51 Fall 2024
+#
+
+.pos 0
+Init:
+    irmovl Stack, %ebp  # set up base pointer
+    irmovl Stack, %esp  # set up stack pointer
+
+# caller-save: %eax, %ecx, %edx
+# callee-save: %ebx, %esi, %edi
+
+Main:
+    irmovl input, %ecx      # ecx = input
+    irmovl $4, %edx         # edx = i
+    irmovl $0, %ebx         # ebx = sum = 0
+    
+    addl %edx, %ecx         # ecx = input + i
+
+Sum:
+    irmovl $0, %eax
+    rmmovl %eax, (%ecx)     # zero out bytes starting at input
+    irmovl $-1, %eax    
+    addl %eax, %ecx         # input--
+    
+    pushl %edx              # push i
+    pushl %ecx              # push input + i - 1
+
+    mrmovl (%ecx), %eax     # eax = lsb
+    pushl %eax              # push lsb
+    
+    call BCD                # eax = bcd? 
+    andl %eax, %eax
+    jne Error
+    
+    popl %eax               # eax = lsb
+    addl %eax, %ebx         # add to sum
+    
+    popl %ecx               # pop input + i - 1
+    popl %edx               # pop i
+    irmovl $-1, %eax
+    addl %eax, %edx         # i--
+    jne Sum
+
+SixMult:
+    mrmovl (%ecx), %edx     # edx = lsb
+    call ModTwo             # eax = lsb mod 2 
+    andl %eax, %eax           
+    jne NotSixMult
+    
+    call ModThree           # eax = sum mod 3
+    andl %eax, %eax 
+    jne NotSixMult
+    
+    irmovl $1, %eax
+    jmp End
+
+NotSixMult:
+    irmovl $0, %eax
+    jmp End
+
+Error:
+    irmovl $0xe, %eax
+
+End:
+    rmmovl %eax, output
+    halt
+
+# BCD
+#   Arguments: 
+#       %ebp+8: int n
+#   Returns:
+#       %eax: 0 if n is a BCD, 1 otherwise
+BCD:
+    pushl %ebp
+    rrmovl %esp, %ebp
+    mrmovl 8(%ebp), %ecx        # ecx = n
+    
+    andl %ecx, %ecx             
+    jl NotBCD                   # n < 0
+    
+    irmovl $9, %edx
+    subl %edx, %ecx         
+    jg NotBCD                   # n > 9
+    
+    irmovl $0, %eax             
+    jmp EndBCD
+    
+NotBCD:
+    irmovl $1, %eax
+
+EndBCD:
+    rrmovl %ebp, %esp
+    popl %ebp
+    ret
+
+# ModTwo
+#   Arguments: 
+#       %edx: n
+#   Returns: 
+#       %eax: n mod 2
+ModTwo:
+    irmovl $1, %eax
+    andl %edx, %eax
+    ret
+
+# ModThree
+#   Arguments: 
+#       %ebx: n
+#   Returns: 
+#       %eax: n mod 3
+ModThree:
+    rrmovl %ebx, %eax
+    irmovl $3, %ecx 
+    andl %eax, %eax
+    jl EndModThree
+    
+MinusThree:
+    subl %ecx, %eax         # n = n - 3
+    jge MinusThree
+
+EndModThree:
+    addl %ecx, %eax         
+    ret
+
+.pos 0x100
+input:
+    .byte 0x06
+    .byte 0x03
+    .byte 0x02
+    .byte 0x01
+
+# 0x104
+output:
+    .long 0xffffffff
+
+.defl Stack 0x200

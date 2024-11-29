@@ -1,0 +1,48 @@
+#
+# exception.ys - program to test illegal register exceptions
+#
+# Jessie Li, CS 51 Fall 2024
+#
+
+.defl stack 0x500
+
+main:
+    
+    irmovl stack, %esp
+    irmovl 0xfeedcafe, %eax
+
+#----------------------------------------------
+# exceptions thrown in kernel mode should halt
+#----------------------------------------------
+    # .byte 0x20
+    # .byte 0x88
+	
+#----------------------------------------------
+# exceptions thrown in user mode should set priv to 0 and send to 0x200
+#----------------------------------------------
+    sysexit
+	
+	.byte 0x20
+	.byte 0x80  # illegal rA
+	
+	# .byte 0x20
+	# .byte 0x08    # illegal rB
+	
+	# .byte 0x20
+	# .byte 0x0f    # illegal rB for rrmovl
+	
+	# .byte 0x40
+	# .byte 0x0e    # illegal rB for rmmovl
+	# .long 0x400
+	
+	nop
+    halt
+    
+#----------------------------------------------
+# exceptions thrown in user mode send us here, in kernel mode
+#----------------------------------------------
+.pos 0x200
+exception:
+    irmovl 0xdeadbeef, %ecx
+    halt
+	

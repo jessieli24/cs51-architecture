@@ -1,0 +1,19 @@
+
+#
+# sys.ys - program to test sysenter/sysexit
+#
+# Jessie Li, CS 51 Fall 2024
+#
+
+.defl stack 0x500
+
+irmovl stack, %esp
+sysexit
+sysenter
+halt
+
+.pos 0x100
+trap:
+    irmovl 0xfeedcafe, %eax
+    ret
+    

@@ -1,0 +1,48 @@
+# 
+# hello.ys - sends "hello world!" to the display
+#
+# Jessie Li, CS 51 Fall 2024
+
+.defl dsr  0x00fffe08
+.defl ddr  0x00fffe0c
+.defl stack 0x500
+
+.pos 0
+    irmovl stack, %esp          # set up stack
+    irmovl string, %ecx         # ecx = string
+	
+printc:
+    mrmovl (%ecx), %eax         # eax = *string
+    andl %eax, %eax
+    je end                      # '/0'
+    
+wait:
+    mrmovl dsr, %ebx
+    addl %ebx, %ebx
+    je wait                     # not ready
+
+    rmmovl %eax, ddr            # write to display	
+	
+    irmovl $0x4, %edx
+    addl %edx, %ecx             # string++
+    jmp printc
+
+end:
+    halt
+
+.align 8
+string: # char* string = "hello world!" (but with 4 bytes/char)
+    .long 0x68       # 'h'
+    .long 0x65       # 'e'
+    .long 0x6c       # 'l'
+    .long 0x6c       # 'l'
+    .long 0x6f       # 'o'
+    .long 0x20       # ' '
+    .long 0x77       # 'w'
+    .long 0x6f       # 'o'
+    .long 0x72       # 'r'
+    .long 0x6c       # 'l'
+    .long 0x64       # 'd'
+    .long 0x21       # '!'
+    .long 0x00       # '\0'
+    

@@ -1,0 +1,41 @@
+# 
+# q2_test.ys - sample test for Von Neumann memory
+#
+# Jessie Li, CS 51 Fall 2024
+
+.pos 0
+init:
+    
+    # --------- normal functionality --------- #
+    
+    # read instructions from irom 
+    addl %edx, %ecx
+    nop
+    nop
+    
+    irmovl dramA, %eax
+    irmovl 0x4, %edx
+    
+    # write/read data from dram
+    rmmovl %edx, dramA           # 0x404: 4
+    mrmovl dramA, %ecx           # ecx = 4
+    addl %ecx, %ecx              # ecx = 8
+    addl %edx, %eax              # eax = dramA + 4
+    rmmovl %ecx, (%eax)          # 0x408: 8
+    
+    # ------------- Von Neumann -------------- #
+    
+    # read data from IROM
+    mrmovl 0x0, %ebx         
+    rmmovl %ebx, dramB
+    
+    irmovl 0x04001f40, %ebx
+    addl %ecx, %eax             # eax = dramA + 12
+    rmmovl %ebx, (%eax)                
+    
+     # read instructions from dram
+    jmp dramB			# expect 0x400: c
+
+
+.defl dramA 0x404
+.defl dramB 0x40c

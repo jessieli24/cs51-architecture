@@ -1,0 +1,84 @@
+# 
+# q1.ys - builds on echo.ys: echoes characters from KB to D, but:
+#         inverts the case of alphabetic letters
+#
+# Jessie Li, CS 51 Fall 2024
+#
+
+# addresses of the I/O devices
+.defl KBSR 0x00fffe00
+.defl KBDR 0x00fffe04
+.defl DSR  0x00fffe08
+.defl DDR  0x00fffe0c
+
+.pos 0
+		# set up stack
+		irmovl stack, %esp
+
+echo:
+		call GETC
+		call PUTC
+		jmp echo
+
+# subroutine: get a char into %eax
+GETC:
+		pushl %ebx  # since we stomp on that
+	
+		# read KBSR until it's 1
+KBNotReady:
+		mrmovl KBSR, %ebx
+		addl %ebx, %ebx
+		je KBNotReady # jmps if zero
+	
+		# got a character---get it into %eax
+		mrmovl  KBDR, %eax
+		
+		#####################
+		call InvertLetter
+		#####################
+
+		popl %ebx
+		ret
+
+# subroutine: inverts the case of character in %eax if alphabetic
+# assumes %eax, %ecx, %edx are caller-save
+InvertLetter:
+    # make uppercase (set bit 6 = 0)
+	irmovl $0xffffffdf, %ecx  
+	andl %eax, %ecx        # ecx = upper(x)
+		
+	# in A...Z?
+	irmovl $0x41, %edx
+	subl %ecx, %edx             
+	jg InvertLetterEnd     # A > upper(x)
+		
+	irmovl $0x5a, %edx
+	subl %ecx, %edx
+	jl InvertLetterEnd     # Z < upper(x)
+		
+	# x is alpha - invert by XOR with 32 (flip bit 6)
+	irmovl $0x20, %ecx
+	xorl %ecx, %eax
+	
+InvertLetterEnd:
+	ret
+		
+# subroutine: send %eax to display
+PUTC:
+		pushl %ecx
+
+		# read DSR until it's 1
+DNotReady:
+		mrmovl DSR, %ecx
+		addl %ecx,%ecx
+		je DNotReady # jmps if zero
+
+		# write the char!
+		rmmovl %eax, DDR	
+	
+		popl %ecx
+		ret
+
+.pos 0x100
+stack: 
+    .long 0xffffffff # the top of the empty stack

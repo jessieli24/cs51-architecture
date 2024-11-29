@@ -1,0 +1,160 @@
+
+# I/O addresses
+.defl KBSR 0x00fffe00
+.defl KBDR 0x00fffe04
+.defl DSR  0x00fffe08
+.defl DDR  0x00fffe0c
+
+
+# if running this on a LogiSim Y86,
+# replace this constant with an address
+# near the top of your RAM
+.defl stack 0x500
+
+# and also remove the brk instructions!
+
+
+
+
+
+#================================================
+# begin privileged code (aka OS)
+#================================================
+
+#----------------------------------------------
+# boot sends us here, in kernel mode
+#----------------------------------------------
+
+.pos 0
+	# set up stack
+	irmovl stack, %esp 
+
+
+	irmovl hello_from_boot,%edx
+	call printstring
+	# brk
+
+	# start running user code in user mode
+	sysexit
+	jmp unpriv
+
+
+
+
+#----------------------------------------------
+# the sysenter trap sends us here, in kernel mode
+#----------------------------------------------
+
+.pos 0x100
+trap:
+	irmovl hello_from_os,%edx
+	call printstring
+	# brk
+	sysexit
+	ret
+
+
+# register usage
+# eax: char to print
+# ecx: read char
+# edx: address of string
+# ebx: mask for least sig byte
+# esi: 0
+# edi: 1
+
+printstring:
+
+	irmovl 0x00,%esi
+	irmovl 0x01,%edi
+	irmovl 0x000000FF, %ebx
+loop:
+	mrmovl (%edx),%eax
+	andl %ebx,%eax
+	je end
+	call PUTC
+	addl %edi,%edx
+	jmp loop
+end:
+	ret
+	
+
+
+# subroutine: send %eax to display
+PUTC:	
+
+	# read DSR until it's 1
+DNotReady:
+	mrmovl DSR, %ecx
+	addl %esi,%ecx
+	je DNotReady # jmps if zero
+
+	# write the char!
+	rmmovl %eax, DDR
+	ret
+
+#----------------------------------------------
+# exceptions thrown in user mode send us here, in kernel mode
+#----------------------------------------------
+.pos 0x200
+exception:
+
+
+	irmovl error, %edx
+	call printstring
+	# brk
+	halt
+
+
+hello_from_boot:
+.byte 0x48
+.byte 0x69
+.byte 0x21
+.byte 0x20
+.byte 0x00
+
+
+hello_from_os:
+.byte 0x59
+.byte 0x65
+.byte 0x73
+.byte 0x3f
+.byte 0x20
+.byte 0x00
+
+
+
+
+error:
+.byte 0x55
+.byte 0x68
+.byte 0x2d
+.byte 0x6f
+.byte 0x68
+.byte 0x21
+.byte 0x20
+.byte 0x00
+
+
+
+
+#==========================================
+# begin uprivileged code 
+#=========================================
+.pos 0x300
+unpriv:
+	# trap to OS
+	nop
+	sysenter
+
+    
+	nop
+	nop
+    
+    
+	# when we come back to user mode, do something illegal
+	.byte 0x20  # this is rrmovl with illegal register codes
+	.byte 0x88  
+
+	nop
+	halt
+										

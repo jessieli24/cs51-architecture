@@ -1,0 +1,7 @@
+-----------------------------------------------
+Fully associative
+64 blocks, 16 bytes in block; 1 sets, 64 lines per set
+
+Hits: 6220013, Misses: 126065, Touches: 6346078
+Time: 9.592761 seconds
+-----------------------------------------------

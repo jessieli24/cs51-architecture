@@ -1,0 +1,25 @@
+# 
+# q3.ys - gets LSB of 4-byte word at address 'target' and stores it in %eax
+# 
+# Jessie Li
+# CS 51, Fall 2024
+
+.pos 0
+	irmovl stack, %esp      # set up stack
+	call LSB
+	halt
+    
+# %eax <-- LSB(*target)
+LSB:
+	mrmovl target, %eax
+	irmovl $0xff, %ecx
+	andl %ecx, %eax
+	ret
+
+.align 4
+target: 
+    .long 0x12345678
+
+.pos 0x80
+stack: 
+    .long 0xffffffff # the top of the empty stack

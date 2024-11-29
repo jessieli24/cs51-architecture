@@ -1,0 +1,119 @@
+
+#
+# priv-io.ys - smaller version of privdemo-F24.ys to demonstrate 
+# that priv must be zero for I/O 
+# operations
+#
+# Jessie Li, CS 51 Fall 2024
+#
+
+# I/O addresses
+.defl KBSR 0x00fffe00
+.defl KBDR 0x00fffe04
+.defl DSR  0x00fffe08
+.defl DDR  0x00fffe0c
+
+
+# if running this on a LogiSim Y86,
+# replace this constant with an address
+# near the top of your RAM
+.defl stack 0x500
+
+# and also remove the brk instructions!
+
+
+#================================================
+# begin privileged code (aka OS)
+#================================================
+
+#----------------------------------------------
+# boot sends us here, in kernel mode
+#----------------------------------------------
+
+.pos 0
+	# set up stack
+	irmovl stack, %esp 
+
+
+	irmovl hello_from_boot,%edx
+	call printstring
+	brk
+
+	# start running user code in user mode
+	sysexit
+	jmp unpriv
+
+
+# register usage
+# eax: char to print
+# ecx: read char
+# edx: address of string
+# ebx: mask for least sig byte
+# esi: 0
+# edi: 1
+
+printstring:
+
+	irmovl 0x00,%esi
+	irmovl 0x01,%edi
+	irmovl 0x000000FF, %ebx
+loop:
+	mrmovl (%edx),%eax
+	andl %ebx,%eax
+	je end
+	call PUTC
+	addl %edi,%edx
+	jmp loop
+end:
+	ret
+	
+
+
+# subroutine: send %eax to display
+PUTC:	
+
+	# read DSR until it's 1
+DNotReady:
+	mrmovl DSR, %ecx
+	addl %esi,%ecx
+	je DNotReady # jmps if zero
+
+	# write the char!
+	rmmovl %eax, DDR
+	ret
+
+hello_from_boot:
+.byte 0x48
+.byte 0x69
+.byte 0x21
+.byte 0x20
+.byte 0x00
+
+
+error:
+.byte 0x55
+.byte 0x68
+.byte 0x2d
+.byte 0x6f
+.byte 0x68
+.byte 0x21
+.byte 0x20
+.byte 0x00
+
+
+#==========================================
+# begin uprivileged code 
+#=========================================
+.pos 0x300
+unpriv:
+	# trap to OS
+	nop
+	sysenter
+
+    
+	# should not print
+	irmovl error, %edx
+	call printstring
+
+	halt
+										

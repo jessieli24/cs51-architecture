@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project source="5.0.3-HC" version="1.0">
+  This file is intended to be loaded by Logisim-evolution (https://github.com/kevinawalsh/logisim-evolution).
+
+  <lib desc="#Base" name="0">
+    <tool name="Text Tool">
+      <a name="font" val="SansSerif plain 12"/>
+      <a name="halign" val="center"/>
+      <a name="text" val=""/>
+      <a name="valign" val="base"/>
+    </tool>
+  </lib>
+  <lib desc="#Wiring" name="1">
+    <tool name="Constant">
+      <a name="value" val="0x1"/>
+    </tool>
+  </lib>
+  <lib desc="#Gates" name="2"/>
+  <lib desc="#Plexers" name="3">
+    <tool name="Multiplexer">
+      <a name="enable" val="false"/>
+    </tool>
+    <tool name="Demultiplexer">
+      <a name="enable" val="false"/>
+    </tool>
+  </lib>
+  <lib desc="#Arithmetic" name="4"/>
+  <lib desc="#Memory" name="5">
+    <tool name="ROM">
+      <a name="contents">addr/data: 8 8
+0
+</a>
+    </tool>
+  </lib>
+  <lib desc="#I/O" name="6"/>
+  <lib desc="#Analog" name="7"/>
+  <lib desc="#Audio" name="8"/>
+  <lib desc="#BFH-Praktika" name="9"/>
+  <main name="main"/>
+  <options>
+    <a name="gateUndefined" val="ignore"/>
+    <a name="simlimit" val="1000"/>
+    <a name="simrand" val="0"/>
+    <a name="simsmooth" val="50"/>
+  </options>
+  <mappings>
+    <tool lib="0" map="Button2" name="Menu Tool"/>
+    <tool lib="0" map="Button3" name="Menu Tool"/>
+    <tool lib="0" map="Ctrl Button1" name="Menu Tool"/>
+  </mappings>
+  <toolbar>
+    <tool lib="0" name="Poke Tool"/>
+    <tool lib="0" name="Edit Tool"/>
+    <tool lib="0" name="Wiring Tool"/>
+    <tool lib="0" name="Cutter Tool"/>
+    <tool lib="0" name="Text Tool">
+      <a name="font" val="SansSerif plain 12"/>
+      <a name="halign" val="center"/>
+      <a name="text" val=""/>
+      <a name="valign" val="base"/>
+    </tool>
+    <sep/>
+    <tool lib="1" name="Pin"/>
+    <tool lib="1" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="labelloc" val="east"/>
+      <a name="type" val="output"/>
+    </tool>
+    <tool lib="2" name="NOT Gate"/>
+    <tool lib="2" name="AND Gate"/>
+    <tool lib="2" name="OR Gate"/>
+    <tool lib="2" name="XOR Gate"/>
+    <tool lib="2" name="NAND Gate"/>
+    <tool lib="2" name="NOR Gate"/>
+  </toolbar>
+  <circuit name="main">
+    <a name="appearance" val="classic"/>
+    <comp lib="0" loc="(165,317)" name="Text">
+      <a name="halign" val="left"/>
+      <a name="text">jmp  7 0
+jle 	7 1
+jl 	  7 2
+je	  7 3
+jne	7 4
+jge	7 5
+jg 	 7 6
+</a>
+    </comp>
+    <comp lib="0" loc="(190,235)" name="Text">
+      <a name="text" val="Z S O"/>
+    </comp>
+    <comp lib="0" loc="(607,287)" name="Text">
+      <a name="text" val="= Cnd(CC, ifun)"/>
+    </comp>
+    <comp lib="1" loc="(210,210)" name="Pin">
+      <a name="label" val="CC"/>
+      <a name="width" val="3"/>
+    </comp>
+    <comp lib="1" loc="(210,280)" name="Pin">
+      <a name="label" val="ifun"/>
+      <a name="width" val="4"/>
+    </comp>
+    <comp lib="1" loc="(220,210)" name="Splitter">
+      <a name="fanout" val="3"/>
+      <a name="incoming" val="3"/>
+    </comp>
+    <comp lib="1" loc="(240,270)" name="Probe">
+      <a name="facing" val="south"/>
+      <a name="radix" val="16"/>
+    </comp>
+    <comp lib="1" loc="(450,360)" name="Constant">
+      <a name="facing" val="north"/>
+      <a name="value" val="0x0"/>
+    </comp>
+    <comp lib="1" loc="(470,200)" name="Constant">
+      <a name="value" val="0x1"/>
+    </comp>
+    <comp lib="1" loc="(530,280)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="label" val="Q"/>
+      <a name="labelloc" val="east"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="2" loc="(330,200)" name="XOR Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="2" loc="(400,180)" name="OR Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="2" loc="(470,240)" name="NOT Gate">
+      <a name="size" val="20"/>
+    </comp>
+    <comp lib="2" loc="(470,250)" name="NOT Gate">
+      <a name="size" val="20"/>
+    </comp>
+    <comp lib="2" loc="(470,260)" name="NOT Gate">
+      <a name="size" val="20"/>
+    </comp>
+    <comp lib="3" loc="(510,280)" name="Multiplexer">
+      <a name="enable" val="false"/>
+      <a name="select" val="4"/>
+    </comp>
+    <wire from="(210,210)" to="(220,210)"/>
+    <wire from="(210,280)" to="(240,280)"/>
+    <wire from="(240,180)" to="(260,180)"/>
+    <wire from="(240,190)" to="(250,190)"/>
+    <wire from="(240,200)" to="(280,200)"/>
+    <wire from="(240,270)" to="(240,280)"/>
+    <wire from="(240,280)" to="(410,280)"/>
+    <wire from="(250,190)" to="(250,210)"/>
+    <wire from="(250,210)" to="(290,210)"/>
+    <wire from="(260,180)" to="(260,190)"/>
+    <wire from="(260,190)" to="(290,190)"/>
+    <wire from="(280,170)" to="(280,200)"/>
+    <wire from="(280,170)" to="(370,170)"/>
+    <wire from="(280,200)" to="(280,230)"/>
+    <wire from="(280,230)" to="(380,230)"/>
+    <wire from="(330,200)" to="(350,200)"/>
+    <wire from="(350,190)" to="(350,200)"/>
+    <wire from="(350,190)" to="(370,190)"/>
+    <wire from="(350,200)" to="(350,220)"/>
+    <wire from="(350,220)" to="(350,250)"/>
+    <wire from="(350,220)" to="(470,220)"/>
+    <wire from="(350,250)" to="(450,250)"/>
+    <wire from="(380,230)" to="(380,240)"/>
+    <wire from="(380,230)" to="(470,230)"/>
+    <wire from="(380,240)" to="(450,240)"/>
+    <wire from="(400,180)" to="(420,180)"/>
+    <wire from="(410,280)" to="(410,400)"/>
+    <wire from="(410,400)" to="(490,400)"/>
+    <wire from="(420,180)" to="(420,210)"/>
+    <wire from="(420,210)" to="(420,260)"/>
+    <wire from="(420,210)" to="(470,210)"/>
+    <wire from="(420,260)" to="(450,260)"/>
+    <wire from="(450,270)" to="(450,280)"/>
+    <wire from="(450,270)" to="(470,270)"/>
+    <wire from="(450,280)" to="(450,290)"/>
+    <wire from="(450,280)" to="(470,280)"/>
+    <wire from="(450,290)" to="(450,300)"/>
+    <wire from="(450,290)" to="(470,290)"/>
+    <wire from="(450,300)" to="(450,310)"/>
+    <wire from="(450,300)" to="(470,300)"/>
+    <wire from="(450,310)" to="(450,320)"/>
+    <wire from="(450,310)" to="(470,310)"/>
+    <wire from="(450,320)" to="(450,330)"/>
+    <wire from="(450,320)" to="(470,320)"/>
+    <wire from="(450,330)" to="(450,340)"/>
+    <wire from="(450,330)" to="(470,330)"/>
+    <wire from="(450,340)" to="(450,350)"/>
+    <wire from="(450,340)" to="(470,340)"/>
+    <wire from="(450,350)" to="(450,360)"/>
+    <wire from="(450,350)" to="(470,350)"/>
+    <wire from="(490,360)" to="(490,400)"/>
+    <wire from="(510,280)" to="(530,280)"/>
+  </circuit>
+</project>

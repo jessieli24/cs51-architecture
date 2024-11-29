@@ -1,0 +1,27 @@
+# 
+# test_q1.txt - test vector for Q1
+# 
+# Expect output 1 if and only if exactly three of four inputs are 1.
+# 
+# Referenced  “Logisim Test Vectors” (www.youtube.com/watch?v=GdDnEPFlXbI). 
+#
+# Jessie Li
+# CS 51, Fall 2024
+# 
+In0 In1 In2 In3 Out 
+0 0 0 0 0 
+0 0 0 1 0
+0 0 1 0 0 
+0 0 1 1 0 
+0 1 0 0 0 
+0 1 0 1 0 
+0 1 1 0 0 
+0 1 1 1 1 
+1 0 0 0 0 
+1 0 0 1 0 
+1 0 1 0 0 
+1 0 1 1 1 
+1 1 0 0 0 
+1 1 0 1 1 
+1 1 1 0 1 
+1 1 1 1 0

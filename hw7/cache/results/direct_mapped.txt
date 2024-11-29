@@ -1,0 +1,7 @@
+-----------------------------------------------
+Direct-mapped
+64 blocks, 16 bytes in block; 64 sets, 1 lines per set
+
+Hits: 6076728, Misses: 269350, Touches: 6346078
+Time: 2.991001 seconds
+-----------------------------------------------

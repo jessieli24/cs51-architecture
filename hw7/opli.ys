@@ -1,0 +1,14 @@
+#
+# opli.ys - test program for the OPLI V, rB instruction (HW7, Q6)
+#
+# Jessie Li, CS 51 Fall 2024
+#
+
+.pos 0
+main:
+    iaddl $0xdeadbeef, %eax
+    iandl $0xbeef, %eax
+    isubl $0xbeef, %eax
+    ixorl $0xfeedcafe, %eax 
+    iaddl $0x80000000, %eax 
+    iaddl $0xba11ade, %ecx

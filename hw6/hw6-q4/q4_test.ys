@@ -1,0 +1,64 @@
+#
+# q4_test.ys - test program for the Y86 Logisim circuit
+#
+# Jessie Li, CS 51 Fall 2024
+
+.pos 0
+
+init:
+    # irmovl
+    irmovl stack, %esp
+    irmovl stack, %ebp
+    
+    irmovl $0xcafe, %eax
+    
+    # rmmovl, mrmovl, opl, jXX
+    rrmovl %eax, %ecx
+    rmmovl %ecx, data
+    mrmovl data, %edx
+    xorl %edx, %ecx
+    jne error
+    
+    # pushl, popl, call, ret, opl, jXX
+    pushl %eax
+    call subroutine
+    popl %eax
+    xorl %edx, %eax
+    jne error
+
+    irmovl $0x2, %ecx
+    irmovl $0x1, %edx
+
+loop:
+    # opl, jXX
+    subl %edx, %ecx
+    jg loop
+    
+    irmovl $0x1, %eax
+    rmmovl %eax, out
+    jmp end
+    
+error:
+    irmovl $0xe, %eax
+    rmmovl %eax, out
+   
+end:
+    halt
+
+subroutine:
+    pushl %ebp
+    rrmovl %esp, %ebp
+    
+    nop
+    irmovl $0xdead, %eax
+    nop
+    
+    rrmovl %ebp, %esp
+    popl %ebp
+    ret
+
+    
+.defl out 0x400
+.defl data 0x404
+.defl stack 0x500
+    

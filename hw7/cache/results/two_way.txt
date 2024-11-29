@@ -1,0 +1,7 @@
+-----------------------------------------------
+2-way set associative
+64 blocks, 16 bytes in block; 32 sets, 2 lines per set
+
+Hits: 6185842, Misses: 160236, Touches: 6346078
+Time: 3.169692 seconds
+-----------------------------------------------

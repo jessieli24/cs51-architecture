@@ -1,0 +1,15 @@
+# 
+# test_q2.txt - test vector for Q2
+# 
+# XOR
+# 
+# Referenced  “Logisim Test Vectors” (www.youtube.com/watch?v=GdDnEPFlXbI). 
+#
+# Jessie Li
+# CS 51, Fall 2024
+# 
+a b c 
+0 0 0
+0 1 1
+1 0 1
+1 1 0
